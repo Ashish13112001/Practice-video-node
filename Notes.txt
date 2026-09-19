@@ -1,0 +1,5 @@
+**Jab server.ts run hoti hai, Node pehle uske static import dependencies ko resolve/evaluate karta hai. 
+Agar un dependencies ki bhi dependencies hain, to unhe bhi process karta hai. Module initialization complete hone
+ke baad importing module (server.ts) ka body execute hota hai.
+**Module import karne par module ka top-level code execute hota hai (first load par).
+**process Node.js ka built-in global object hai, aur process.env us object ki ek property hai.
