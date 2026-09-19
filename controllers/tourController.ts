@@ -45,9 +45,18 @@ interface Tour {
 //   next();
 // };
 
+const aliasTopTour = (req: Request, res: Response, next: NextFunction) => {
+  // Express 5: req.query is a getter that re-parses req.url on every access.
+  // Mutating req.query.limit (etc.) only changes a throwaway object, so
+  // rewrite the query string instead.
+  req.url = `${req.path}?limit=5&sort=-ratingsAverage,price&fields=name,price,ratingsAverage,difficulty`;
+
+  next();
+};
+
 const getAllTours = async (req: Request, res: Response) => {
   try {
-    console.log('req.query ==> ', req.query);
+    console.log('req.query ==> ', req);
 
     // Build Query
 
@@ -200,4 +209,5 @@ export default {
   deleteTour,
   // checkID,
   // checkBody,
+  aliasTopTour
 };
