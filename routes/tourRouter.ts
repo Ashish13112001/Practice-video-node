@@ -9,6 +9,7 @@ router.route('/top-5-cheap').get(tourController.aliasTopTour, tourController.get
 
 router.route('/tour-stats').get(tourController.getTourStats);
 
+router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 router
   .route('/') //.route ka benefit hai ki same path ke different HTTP methods ko ek jagah group kar sakte ho.
   .get(tourController.getAllTours)

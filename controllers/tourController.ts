@@ -143,6 +143,7 @@ const getTourStats = async (req: Request, res: Response) => {
           avgPrice: { $avg: '$price' },
           minPrice: { $min: '$price' },
           maxPrice: { $max: '$price' },
+          names: { $push: '$name' },
         },
       },
       {
@@ -166,6 +167,59 @@ const getTourStats = async (req: Request, res: Response) => {
   }
 };
 
+const getMonthlyPlan = async (
+  req: Request<{ year: string }>,
+  res: Response,
+) => {
+  try {
+    const year = parseInt(req.params.year, 10); //2021
+    const monthlyPlan = await Tour.aggregate([
+      {
+        $unwind: '$startDates',
+      },
+      {
+        $match: {
+          startDates: {
+            $gte: new Date(`${year}-01-01`),
+            $lte: new Date(`${year}-12-31`),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: { $month: '$startDates' },
+          numTours: { $sum: 1 },
+          // tours: { $push: '$$ROOT' },
+          tours: { $push: '$name' },
+        },
+      },
+      {
+        $addFields: {
+          month: '$_id',
+        },
+      },
+      {
+        $project: { _id: 0 },
+      },
+      {
+        $sort: { numTours: -1 },
+      },
+    ]);
+    res.status(200).json({
+      status: 'success',
+      totalTours: monthlyPlan.length,
+      data: {
+        monthlyPlan: monthlyPlan,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err,
+    });
+  }
+};
+
 export default {
   getTour,
   getAllTours,
@@ -174,4 +228,5 @@ export default {
   deleteTour,
   aliasTopTour,
   getTourStats,
+  getMonthlyPlan,
 };
