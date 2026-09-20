@@ -17,6 +17,7 @@ interface ITour extends Document {
   createdAt: Date;
   startDates: Date[];
   slug: string;
+  secretTour: boolean;
 }
 
 const tourSchema = new Schema<ITour>(
@@ -93,6 +94,10 @@ const tourSchema = new Schema<ITour>(
     },
 
     startDates: [Date],
+
+    secretTour: {
+      type: Boolean,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -117,6 +122,13 @@ tourSchema.pre('save', function () {
 // tourSchema.post('save', function (doc) {
 //   console.log('doc----------', doc);
 // });
+
+//Query Middleware
+// this will only for find and if we want that all the query start from find use regular expression
+// tourSchema.pre(/^find/, function () {
+tourSchema.pre('find', function () {
+  this.find({ secretTour: { $ne: true } });
+});
 
 const Tour = mongoose.model<ITour>('Tour', tourSchema);
 
