@@ -27,6 +27,14 @@ const tourSchema = new Schema<ITour>(
       required: [true, 'A tour must have a name'],
       unique: true,
       trim: true,
+      maxlength: [
+        40,
+        'A tour name must have less or equall then 40 characters',
+      ],
+      minlength: [
+        10,
+        'A tour name must have greater or equall to 10 characters',
+      ],
     },
 
     slug: {
@@ -47,11 +55,17 @@ const tourSchema = new Schema<ITour>(
     difficulty: {
       type: String,
       required: [true, 'A tour must have a difficulty'],
+      enum: {
+        values: ['easy', 'medium', 'difficult'],
+        message: 'Difficulty is either: easy, medium, difficult',
+      },
     },
 
     ratingsAverage: {
       type: Number,
       default: 4.5,
+      min: [1, 'rating must have above 1.0'],
+      max: [5, 'rating must have below 5.0'],
     },
 
     ratingsQuantity: {
