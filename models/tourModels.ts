@@ -130,6 +130,17 @@ tourSchema.pre('find', function () {
   this.find({ secretTour: { $ne: true } });
 });
 
+//Aggregation middleware
+tourSchema.pre('aggregate', function () {
+  this.pipeline().unshift({
+    $match: {
+      secretTour: { $ne: true },
+    },
+  });
+
+  console.log('aggregation pipeline: ', this.pipeline());
+});
+
 const Tour = mongoose.model<ITour>('Tour', tourSchema);
 
 export default Tour;
