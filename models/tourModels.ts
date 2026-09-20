@@ -80,6 +80,14 @@ const tourSchema = new Schema<ITour>(
 
     priceDiscount: {
       type: Number,
+      validate: {
+        validator: function(this: ITour,val){
+          //we use npm library for validation//
+          //this only point to current doc on NEW document creation
+            return val < this.price;
+        },
+        message: 'Discount price should be below regular price'
+      }
     },
 
     summary: {
