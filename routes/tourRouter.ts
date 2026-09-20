@@ -7,6 +7,8 @@ const router = express.Router(); //express.Router() --> Express ka ek separate m
 
 router.route('/top-5-cheap').get(tourController.aliasTopTour, tourController.getAllTours);
 
+router.route('/tour-stats').get(tourController.getTourStats);
+
 router
   .route('/') //.route ka benefit hai ki same path ke different HTTP methods ko ek jagah group kar sakte ho.
   .get(tourController.getAllTours)
